@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Disposition SOP — Cactus Home Offer</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@2.44.0/tabler-icons.min.css">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cho-green-dark: #1e4d3a; --cho-green-mid: #2d7a56; --cho-green-light: #e8f5ee; --cho-green-border: #b6dfc9;
+    --cho-orange: #e8834a; --cho-orange-light: #fef3ec; --cho-orange-border: #f5c9a8;
+    --cho-bg: #f7f5f0; --cho-white: #ffffff; --cho-text: #1a1a1a; --cho-text-mid: #555; --cho-text-muted: #888; --cho-border: #e5e5e0;
+  }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #eeece7; min-height: 100vh; padding: 2rem 1rem; }
+  .page { max-width: 740px; margin: 0 auto; border-radius: 16px; overflow: hidden; box-shadow: 0 4px 30px rgba(0,0,0,0.12); }
+  .cho-header { background: var(--cho-green-dark); padding: 20px 24px 18px; display: flex; align-items: center; gap: 14px; }
+  .cho-logo { width: 42px; height: 42px; background: var(--cho-green-mid); border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .cho-logo i { color: #fff; font-size: 22px; }
+  .cho-header-text h1 { font-size: 18px; font-weight: 600; color: #fff; margin-bottom: 2px; }
+  .cho-header-text p { font-size: 12px; color: rgba(255,255,255,0.6); }
+  .tabs { display: flex; background: var(--cho-green-dark); padding: 0 24px; border-bottom: 3px solid var(--cho-green-mid); }
+  .tab { padding: 10px 14px; font-size: 13px; font-weight: 500; cursor: pointer; border: none; background: none; color: rgba(255,255,255,0.5); border-bottom: 3px solid transparent; margin-bottom: -3px; font-family: inherit; transition: all 0.15s; }
+  .tab.active { color: #fff; border-bottom: 3px solid var(--cho-orange); }
+  .tab:hover:not(.active) { color: rgba(255,255,255,0.85); }
+  .sop-body { background: var(--cho-bg); padding: 20px 24px 32px; }
+  .section { display: none; } .section.active { display: block; }
+
+  /* Alert */
+  .alert { background: var(--cho-orange-light); border: 1px solid var(--cho-orange-border); border-radius: 10px; padding: 12px 14px; margin-bottom: 1.25rem; display: flex; gap: 10px; align-items: flex-start; }
+  .alert i { color: var(--cho-orange); font-size: 18px; margin-top: 1px; flex-shrink: 0; }
+  .alert p { font-size: 13px; color: #7c3a1a; line-height: 1.55; }
+
+  /* Steps */
+  .step { border: 1px solid var(--cho-border); border-radius: 12px; margin-bottom: 8px; overflow: hidden; background: var(--cho-white); }
+  .step-header { display: flex; align-items: center; gap: 12px; padding: 13px 16px; cursor: pointer; transition: background 0.1s; user-select: none; }
+  .step-header:hover { background: #fafaf7; }
+  .step-num { width: 27px; height: 27px; border-radius: 50%; background: var(--cho-green-dark); display: flex; align-items: center; justify-content: center; font-size: 12px; font-weight: 600; color: #fff; flex-shrink: 0; }
+  .step-title { flex: 1; font-size: 14px; font-weight: 500; color: var(--cho-text); }
+  .step-badge { font-size: 11px; padding: 3px 10px; border-radius: 20px; font-weight: 600; flex-shrink: 0; }
+  .badge-green { background: var(--cho-green-light); color: var(--cho-green-dark); }
+  .badge-blue { background: #eff6ff; color: #1d4ed8; }
+  .badge-warn { background: var(--cho-orange-light); color: #92400e; }
+  .badge-gray { background: #f3f4f6; color: #374151; }
+  .step-chevron { font-size: 16px; color: #bbb; transition: transform 0.2s; flex-shrink: 0; }
+  .step-chevron.open { transform: rotate(180deg); }
+  .step-body { display: none; padding: 4px 16px 16px; border-top: 1px solid #f0f0ec; }
+  .step-body.open { display: block; }
+  .step-body p { font-size: 13px; color: var(--cho-text-mid); line-height: 1.65; margin-top: 12px; }
+  .step-body ul { margin-top: 10px; padding-left: 0; list-style: none; }
+  .step-body ul li { font-size: 13px; color: var(--cho-text-mid); line-height: 1.65; padding: 3px 0 3px 18px; position: relative; }
+  .step-body ul li::before { content: "·"; position: absolute; left: 5px; color: #bbb; font-size: 18px; line-height: 1.3; }
+  .step-body ol { margin-top: 10px; padding-left: 0; list-style: none; counter-reset: ol-counter; }
+  .step-body ol li { font-size: 13px; color: var(--cho-text-mid); line-height: 1.65; padding: 4px 0 4px 28px; position: relative; counter-increment: ol-counter; }
+  .step-body ol li::before { content: counter(ol-counter); position: absolute; left: 0; width: 20px; height: 20px; background: var(--cho-green-light); color: var(--cho-green-dark); border-radius: 50%; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; top: 5px; }
+
+  /* Notes */
+  .note { background: var(--cho-orange-light); border: 1px solid var(--cho-orange-border); border-radius: 8px; padding: 10px 13px; margin-top: 12px; }
+  .note p { color: #7c3a1a !important; margin-top: 0 !important; font-size: 13px; }
+  .note p + p { margin-top: 8px !important; }
+
+  /* Info note (green) */
+  .note-green { background: var(--cho-green-light); border: 1px solid var(--cho-green-border); border-radius: 8px; padding: 10px 13px; margin-top: 12px; }
+  .note-green p { color: var(--cho-green-dark) !important; margin-top: 0 !important; font-size: 13px; }
+
+  /* Links */
+  .step-link { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--cho-green-dark); text-decoration: none; padding: 4px 10px; background: var(--cho-green-light); border-radius: 6px; margin-top: 6px; font-weight: 600; border: 1px solid var(--cho-green-border); transition: opacity 0.15s; }
+  .step-link:hover { opacity: 0.75; }
+  .step-link.video { background: #fff3e8; border-color: var(--cho-orange-border); color: #92400e; }
+  .step-link.video i { color: var(--cho-orange); }
+
+  /* Section divider */
+  .side-divider { font-size: 12px; font-weight: 700; color: var(--cho-green-mid); text-transform: uppercase; letter-spacing: 0.06em; margin: 18px 0 10px; padding-top: 14px; border-top: 1px solid var(--cho-border); display: flex; align-items: center; gap: 6px; }
+
+  /* Sub-steps inside a step */
+  .substep-list { margin-top: 12px; display: flex; flex-direction: column; gap: 8px; }
+  .substep { display: flex; gap: 10px; align-items: flex-start; background: #fafaf7; border: 1px solid var(--cho-border); border-radius: 8px; padding: 10px 12px; }
+  .substep-icon { width: 24px; height: 24px; border-radius: 50%; background: var(--cho-green-mid); display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .substep-icon i { color: #fff; font-size: 12px; }
+  .substep-text { font-size: 13px; color: var(--cho-text-mid); line-height: 1.6; }
+  .substep-text strong { color: var(--cho-text); font-weight: 600; display: block; margin-bottom: 2px; }
+
+  /* Docs tab */
+  .docs-note { font-size: 13px; color: var(--cho-text-muted); margin-bottom: 1rem; line-height: 1.5; }
+  .docs-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .doc-card { background: var(--cho-white); border: 1px solid var(--cho-border); border-radius: 10px; padding: 12px 14px; display: flex; align-items: center; gap: 10px; text-decoration: none; color: inherit; transition: border-color 0.15s, background 0.15s; }
+  .doc-card:hover { border-color: var(--cho-green-border); background: var(--cho-green-light); }
+  .doc-icon { font-size: 20px; color: var(--cho-green-mid); flex-shrink: 0; }
+  .doc-card-text { flex: 1; min-width: 0; }
+  .doc-card-title { font-size: 13px; font-weight: 500; color: var(--cho-text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .doc-card-sub { font-size: 11px; color: var(--cho-text-muted); margin-top: 1px; }
+  .ext-icon { font-size: 14px; color: #ccc; flex-shrink: 0; }
+
+  /* Quick reference tab */
+  .qr-section-title { font-size: 11px; font-weight: 700; color: var(--cho-green-mid); text-transform: uppercase; letter-spacing: 0.07em; padding: 6px 0 4px; margin-top: 14px; }
+  .qr-card { background: var(--cho-white); border: 1px solid var(--cho-border); border-radius: 12px; padding: 14px 16px; margin-bottom: 10px; }
+  .qr-card-title { font-size: 13px; font-weight: 600; color: var(--cho-green-dark); margin-bottom: 8px; display: flex; align-items: center; gap: 7px; }
+  .qr-card-title i { font-size: 16px; color: var(--cho-green-mid); }
+  .qr-card p { font-size: 13px; color: var(--cho-text-mid); line-height: 1.6; }
+  .qr-card ul { list-style: none; padding: 0; margin-top: 6px; }
+  .qr-card ul li { font-size: 13px; color: var(--cho-text-mid); line-height: 1.6; padding: 2px 0 2px 16px; position: relative; }
+  .qr-card ul li::before { content: "·"; position: absolute; left: 4px; color: #bbb; font-size: 18px; line-height: 1.3; }
+  .qr-warn { background: var(--cho-orange-light); border-color: var(--cho-orange-border); }
+  .qr-warn .qr-card-title { color: #7c3a1a; } .qr-warn .qr-card-title i { color: var(--cho-orange); }
+  .qr-warn p, .qr-warn ul li { color: #7c3a1a; }
+
+  /* Subject line chips */
+  .subject-chips { display: flex; flex-direction: column; gap: 6px; margin-top: 10px; }
+  .subject-chip { background: #f0faf5; border: 1px solid var(--cho-green-border); border-radius: 7px; padding: 7px 11px; font-size: 12px; color: var(--cho-green-dark); font-style: italic; }
+
+  /* GHL steps */
+  .ghl-steps { margin-top: 12px; counter-reset: ghl; display: flex; flex-direction: column; gap: 6px; }
+  .ghl-step { display: flex; gap: 10px; align-items: flex-start; }
+  .ghl-num { width: 22px; height: 22px; border-radius: 50%; background: var(--cho-green-dark); color: #fff; font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 1px; }
+  .ghl-text { font-size: 13px; color: var(--cho-text-mid); line-height: 1.6; }
+
+  @media (max-width: 540px) { .sop-body { padding: 16px 16px 24px; } .cho-header { padding: 16px; } .tabs { padding: 0 16px; } .docs-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="cho-header">
+    <div class="cho-logo"><i class="ti ti-building-store"></i></div>
+    <div class="cho-header-text">
+      <h1>Disposition Process — SOP</h1>
+      <p>Cactus Home Offer · Off-market deal disposition workflow</p>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" onclick="showTab('workflow')">Workflow steps</button>
+    <button class="tab" onclick="showTab('docs')">Tools & links</button>
+    <button class="tab" onclick="showTab('qr')">Quick reference</button>
+  </div>
+
+  <div class="sop-body">
+
+    <!-- WORKFLOW TAB -->
+    <div id="tab-workflow" class="section active">
+      <div class="alert">
+        <i class="ti ti-alert-triangle"></i>
+        <p><strong>Pricing gate:</strong> Do not begin any buyer outreach until the starting price and ARV have been confirmed with Chris. All marketing steps depend on this approval.</p>
+      </div>
+      <div id="steps-container"></div>
+    </div>
+
+    <!-- TOOLS & LINKS TAB -->
+    <div id="tab-docs" class="section">
+      <p class="docs-note">Click any card to open the tool or document directly.</p>
+      <div class="docs-grid" id="docs-grid"></div>
+    </div>
+
+    <!-- QUICK REFERENCE TAB -->
+    <div id="tab-qr" class="section">
+
+      <div class="qr-section-title">Pricing approval</div>
+      <div class="qr-card qr-warn">
+        <div class="qr-card-title"><i class="ti ti-alert-triangle"></i> Step 5 is a hard stop</div>
+        <p>Nothing goes to buyers until Chris signs off on <strong>both</strong> the starting price and ARV. Steps 1–4 are prep. Steps 6–11 are outreach. The gate is non-negotiable.</p>
+      </div>
+
+      <div class="qr-section-title">Buyer list sourcing logic</div>
+      <div class="qr-card">
+        <div class="qr-card-title"><i class="ti ti-users"></i> Which list to use</div>
+        <p>Always check the existing buyer database first:</p>
+        <ul>
+          <li>Filter for buyers who have purchased in the property's county</li>
+          <li>Filter for buyers who have purchased in any county within 50 miles</li>
+          <li>Only if no matches → pull a fresh list via InvestorBase</li>
+        </ul>
+      </div>
+
+      <div class="qr-section-title">GHL campaign setup</div>
+      <div class="qr-card">
+        <div class="qr-card-title"><i class="ti ti-brand-google"></i> GoHighLevel checklist</div>
+        <ul>
+          <li>Log into the <strong>Disposition sub-account</strong> in GHL — not the main account</li>
+          <li>Duplicate an <strong>existing</strong> SMS + email workflow — never build from scratch</li>
+          <li>Update the initial text message and email action items with this property's details</li>
+          <li>Upload the buyer list and name it by the property address</li>
+          <li>Launch the workflow to fire both campaigns simultaneously</li>
+        </ul>
+      </div>
+
+      <div class="qr-section-title">Buyer response handling</div>
+      <div class="qr-card">
+        <div class="qr-card-title"><i class="ti ti-message-reply"></i> DispoGPT replies</div>
+        <p>For every interested buyer response across InvestorLift, SMS, or email:</p>
+        <ul>
+          <li>Copy and paste the buyer's message into DispoGPT</li>
+          <li>Use the generated response as your reply</li>
+          <li>Tag the buyer in the tracking sheet immediately after first contact</li>
+        </ul>
+      </div>
+
+      <div class="qr-section-title">Email subject line prompt</div>
+      <div class="qr-card">
+        <div class="qr-card-title"><i class="ti ti-mail"></i> Use this prompt to generate subject lines</div>
+        <p style="font-style:italic;background:#f7f5f0;border-radius:6px;padding:8px 10px;margin-top:8px;border:1px solid var(--cho-border)">
+          "I need engaging email subject lines for an off-market property we're selling. Here's the property information: [Insert Property Information]. Please generate 5 subject lines that are short, enticing, and highlight only positive attributes. Make them professional yet compelling and encourage buyers to open the email."
+        </p>
+      </div>
+
+      <div class="qr-section-title">Tracking sheet reminder</div>
+      <div class="qr-card">
+        <div class="qr-card-title"><i class="ti ti-table"></i> One sheet per deal</div>
+        <p>Create a <strong>new dedicated tracking sheet</strong> for each property — do not reuse a previous deal's sheet. Name it by property address. Log every interested buyer, offer, conversation, and follow-up note there.</p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+const DISPO_GPT = "https://chatgpt.com/g/g-697619948d9c81918c21815611ff50d4-dispo-gpt";
+const OFF_MARKET_DAILY = "https://deals.offmarketdaily.com/";
+const INVESTOR_BASE = "https://www.investorbase.com/search";
+const INVESTOR_BASE_SOP = "https://docs.google.com/document/d/1c2z1eu_VP34YJ57dRwU_K66j4VxK8OrV6ickZOKpmU8/edit?usp=sharing";
+const INVESTOR_LIFT_SOP = "https://docs.google.com/document/d/1_0H6ngpi7iikOnVVDn1K8cbLdcBTSUZvvVSgJMyujaM/edit?usp=sharing";
+const TRACKING_SHEET = "https://docs.google.com/spreadsheets/d/19iE0CzdrlTGP7-16vY2kXPUmkwwlG-ac/edit?usp=sharing";
+const GHL_VIDEO = "https://drive.google.com/file/d/1vvmcC3q72xfuN9iuhu4DkWI9S-iwSrjZ/view?usp=drive_link";
+
+const steps = [
+  {
+    num: 1,
+    title: "Receive the deal",
+    badge: "Intake", badgeType: "green",
+    body: `<p>Once a property is marked <strong>Under Contract</strong> in the Active Transactions Chat, gather all three required items before proceeding:</p>
+    <div class="substep-list">
+      <div class="substep"><div class="substep-icon"><i class="ti ti-file-text"></i></div><div class="substep-text"><strong>Executed Contract</strong>Fully signed purchase agreement for the property.</div></div>
+      <div class="substep"><div class="substep-icon"><i class="ti ti-package"></i></div><div class="substep-text"><strong>Property Package</strong>Full details, comps, and condition notes from the acquisitions team.</div></div>
+      <div class="substep"><div class="substep-icon"><i class="ti ti-camera"></i></div><div class="substep-text"><strong>Property Photos</strong>All available photos for the listing.</div></div>
+    </div>`
+  },
+  {
+    num: 2,
+    title: "Create the property information sheet",
+    badge: "Prep", badgeType: "green",
+    body: `<p>Collect and format all of the following details into the property information sheet:</p>
+    <ul>
+      <li>Property address</li>
+      <li>Starting price</li>
+      <li>ARV (After Repair Value)</li>
+      <li>Beds / baths</li>
+      <li>Square footage</li>
+      <li>Year built</li>
+      <li>Occupancy status (Vacant or Occupied)</li>
+      <li>Close date</li>
+      <li>Earnest Money Deposit (EMD)</li>
+      <li>Property condition notes — Roof, HVAC, Foundation, etc.</li>
+    </ul>`
+  },
+  {
+    num: 3,
+    title: "Format the deal with DispoGPT",
+    badge: "Prep", badgeType: "green",
+    body: `<p>Copy all gathered information and paste it into DispoGPT. It will generate a formatted property package ready for marketing.</p>
+    <a class="step-link" href="${DISPO_GPT}" target="_blank"><i class="ti ti-external-link"></i> Open DispoGPT</a>`
+  },
+  {
+    num: 4,
+    title: "Create the deal in Off Market Daily",
+    badge: "Marketing", badgeType: "blue",
+    body: `<p>Once the property has been formatted by DispoGPT, create the listing in Off Market Daily:</p>
+    <ol>
+      <li>Create a <strong>New Deal</strong> in Off Market Daily</li>
+      <li>Copy and paste the formatted property details</li>
+      <li>Upload all property photos</li>
+      <li>Arrange photos in the correct order</li>
+    </ol>
+    <p style="margin-top:14px">Then generate the following marketing assets from Off Market Daily:</p>
+    <ul>
+      <li>OMD Property Page</li>
+      <li>Email Blast</li>
+      <li>Text Blast</li>
+    </ul>
+    <a class="step-link" href="${OFF_MARKET_DAILY}" target="_blank"><i class="ti ti-external-link"></i> Open Off Market Daily</a>`
+  },
+  {
+    num: 5,
+    title: "Confirm pricing with Chris — approval gate",
+    badge: "⚠ Approval", badgeType: "warn",
+    body: `<p>Before launching any marketing or reaching out to buyers, confirm both of the following with Chris:</p>
+    <ul>
+      <li>Starting price</li>
+      <li>ARV (After Repair Value)</li>
+    </ul>
+    <div class="note"><p><i class="ti ti-lock"></i> <strong>Do not proceed to Steps 6–11 until pricing has been approved.</strong> This is a hard stop — no buyer outreach happens before this confirmation.</p></div>`
+  },
+  {
+    num: 6,
+    title: "Identify target counties",
+    badge: "Research", badgeType: "green",
+    body: `<p>Using ChatGPT or Claude, identify the following:</p>
+    <ul>
+      <li>The county where the property is located</li>
+      <li>All counties within a <strong>50-mile radius</strong> of the property</li>
+    </ul>
+    <p>Create a complete list of all target counties — this list drives the buyer search in Step 7 and the campaign targeting in Step 9.</p>`
+  },
+  {
+    num: 7,
+    title: "Build buyer list",
+    badge: "Research", badgeType: "green",
+    body: `<p>Review the existing buyer database and locate buyers who have previously purchased in:</p>
+    <ul>
+      <li>The property's county</li>
+      <li>Any county within the 50-mile radius list from Step 6</li>
+    </ul>
+    <div class="note-green"><p><i class="ti ti-info-circle"></i> <strong>If no buyers are found in those markets,</strong> pull a fresh buyer list through InvestorBase using the SOP linked below.</p></div>
+    <a class="step-link" href="${INVESTOR_BASE}" target="_blank"><i class="ti ti-external-link"></i> Open InvestorBase</a>
+    <a class="step-link" href="${INVESTOR_BASE_SOP}" target="_blank"><i class="ti ti-file-text"></i> InvestorBase SOP</a>`
+  },
+  {
+    num: 8,
+    title: "Create property in InvestorLift",
+    badge: "Marketing", badgeType: "blue",
+    body: `<p>Create a new property listing in InvestorLift using all information gathered in Steps 1–2. Complete all required fields per the SOP and upload all property photos.</p>
+    <a class="step-link" href="${INVESTOR_LIFT_SOP}" target="_blank"><i class="ti ti-file-text"></i> InvestorLift SOP</a>`
+  },
+  {
+    num: 9,
+    title: "Create marketing campaigns in GoHighLevel",
+    badge: "Marketing", badgeType: "blue",
+    body: `<p>Log into the <strong>Disposition sub-account</strong> in GoHighLevel and set up both campaigns:</p>
+    <div class="ghl-steps">
+      <div class="ghl-step"><div class="ghl-num">1</div><div class="ghl-text"><strong>Pull the Disposition sub-account</strong> — make sure you're in the correct sub-account, not the main GHL account.</div></div>
+      <div class="ghl-step"><div class="ghl-num">2</div><div class="ghl-text"><strong>Duplicate an existing workflow</strong> — find an existing SMS + email workflow and duplicate it. Never build from scratch.</div></div>
+      <div class="ghl-step"><div class="ghl-num">3</div><div class="ghl-text"><strong>Update the content</strong> — edit the initial text message and email action items with this property's details.</div></div>
+      <div class="ghl-step"><div class="ghl-num">4</div><div class="ghl-text"><strong>Upload the buyer list</strong> — use the list built in Step 7 (from InvestorBase or existing DB).</div></div>
+      <div class="ghl-step"><div class="ghl-num">5</div><div class="ghl-text"><strong>Name the list</strong> by the property address.</div></div>
+      <div class="ghl-step"><div class="ghl-num">6</div><div class="ghl-text"><strong>Launch the workflow</strong> to start both the SMS campaign and email campaign simultaneously.</div></div>
+    </div>
+    <div class="note-green" style="margin-top:14px"><p><i class="ti ti-brand-youtube"></i> <strong>Watch the full walkthrough video</strong> for the step-by-step GHL campaign setup process.</p></div>
+    <a class="step-link video" href="${GHL_VIDEO}" target="_blank"><i class="ti ti-player-play"></i> Watch GHL campaign walkthrough</a>
+    <p style="margin-top:14px"><strong>Email subject line — use this prompt in ChatGPT or Claude:</strong></p>
+    <p style="font-style:italic;background:#f7f5f0;border-radius:6px;padding:8px 10px;margin-top:6px;border:1px solid var(--cho-border);font-size:12px;color:var(--cho-text-mid)">
+      "I need engaging email subject lines for an off-market property we're selling. Here's the property information: [Insert Property Information]. Please generate 5 subject lines that are short, enticing, and highlight only positive attributes. Make them professional yet compelling and encourage buyers to open the email."
+    </p>
+    <p style="margin-top:10px"><strong>SMS blast — </strong>use the property details to generate the initial text message for the SMS campaign.</p>`
+  },
+  {
+    num: 10,
+    title: "Monitor buyer responses",
+    badge: "Outreach", badgeType: "blue",
+    body: `<p>Monitor responses across all three channels:</p>
+    <ul>
+      <li>InvestorLift</li>
+      <li>SMS campaigns</li>
+      <li>Email campaigns</li>
+    </ul>
+    <p>When responding to buyers, copy and paste the buyer's message into DispoGPT and use the generated response.</p>
+    <a class="step-link" href="${DISPO_GPT}" target="_blank"><i class="ti ti-external-link"></i> Open DispoGPT</a>`
+  },
+  {
+    num: 11,
+    title: "Track interested buyers",
+    badge: "Tracking", badgeType: "gray",
+    body: `<p>For every interested buyer, maintain a complete record in the dedicated property tracking sheet:</p>
+    <ul>
+      <li>Tag them in the tracking sheet</li>
+      <li>Record all relevant buyer information</li>
+      <li>Copy and paste buyer details from InvestorLift into the sheet</li>
+      <li>Maintain notes on all conversations, offers, and follow-ups</li>
+    </ul>
+    <div class="note-green"><p><i class="ti ti-table"></i> <strong>Create a new dedicated tracking sheet for each property.</strong> Use the sample sheet below as your template — duplicate it and name the new copy after the property address.</p></div>
+    <a class="step-link" href="${TRACKING_SHEET}" target="_blank"><i class="ti ti-external-link"></i> Open sample tracking sheet</a>`
+  }
+];
+
+const docs = [
+  { title: "Off Market Daily", sub: "Create & manage property listings", icon: "ti-building-store", url: OFF_MARKET_DAILY },
+  { title: "DispoGPT", sub: "Format deals & craft buyer replies", icon: "ti-robot", url: DISPO_GPT },
+  { title: "InvestorBase", sub: "Pull fresh buyer lists by market", icon: "ti-users", url: INVESTOR_BASE },
+  { title: "InvestorBase SOP", sub: "Step-by-step buyer list guide", icon: "ti-file-text", url: INVESTOR_BASE_SOP },
+  { title: "InvestorLift SOP", sub: "Property listing guide", icon: "ti-file-text", url: INVESTOR_LIFT_SOP },
+  { title: "Sample tracking sheet", sub: "Duplicate for each new deal", icon: "ti-table", url: TRACKING_SHEET },
+  { title: "GHL campaign walkthrough", sub: "SMS & email setup video", icon: "ti-player-play", url: GHL_VIDEO },
+];
+
+function buildSteps() {
+  const el = document.getElementById('steps-container');
+  steps.forEach(s => {
+    el.innerHTML += `
+      <div class="step">
+        <div class="step-header" onclick="toggleStep(this)">
+          <div class="step-num">${s.num}</div>
+          <div class="step-title">${s.title}</div>
+          <span class="step-badge badge-${s.badgeType}">${s.badge}</span>
+          <i class="ti ti-chevron-down step-chevron"></i>
+        </div>
+        <div class="step-body">${s.body}</div>
+      </div>`;
+  });
+}
+
+function buildDocs() {
+  const el = document.getElementById('docs-grid');
+  docs.forEach(d => {
+    el.innerHTML += `
+      <a class="doc-card" href="${d.url}" target="_blank">
+        <i class="ti ${d.icon} doc-icon"></i>
+        <div class="doc-card-text">
+          <div class="doc-card-title">${d.title}</div>
+          <div class="doc-card-sub">${d.sub}</div>
+        </div>
+        <i class="ti ti-external-link ext-icon"></i>
+      </a>`;
+  });
+}
+
+function toggleStep(h) {
+  const b = h.nextElementSibling;
+  const c = h.querySelector('.step-chevron');
+  const o = b.classList.contains('open');
+  b.classList.toggle('open', !o);
+  c.classList.toggle('open', !o);
+}
+
+function showTab(name) {
+  const names = ['workflow', 'docs', 'qr'];
+  document.querySelectorAll('.tab').forEach((t, i) => t.classList.toggle('active', names[i] === name));
+  document.querySelectorAll('.section').forEach((s, i) => s.classList.toggle('active', names[i] === name));
+}
+
+buildSteps();
+buildDocs();
+</script>
+</body>
+</html>
